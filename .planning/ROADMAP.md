@@ -31,7 +31,7 @@ Build a learning e-commerce store in nine fine-grained vertical phases: monorepo
   2. `apps/web` serves the existing Vite React app; `apps/api` starts a NestJS hello/health endpoint
   3. PostgreSQL is reachable via Docker Compose with connection string documented
 
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 **Wave 1**
@@ -40,7 +40,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-02: Scaffold `apps/api` NestJS app and wire turbo `dev` pipeline
+- [x] 01-02: Scaffold `apps/api` NestJS app and wire turbo `dev` pipeline
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -217,7 +217,7 @@ Phases execute in numeric order: 1 → 2 → … → 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Monorepo Foundation | 1/3 | In Progress|  |
+| 1. Monorepo Foundation | 2/3 | In Progress|  |
 | 2. Prisma Data Model | 0/2 | Not started | - |
 | 3. Shared Types Pipeline | 0/2 | Not started | - |
 | 4. Products API | 0/2 | Not started | - |
