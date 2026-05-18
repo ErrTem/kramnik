@@ -63,8 +63,13 @@ Plans:
 
 Plans:
 
-- [ ] 02-01: Author Prisma schema and initial migration
-- [ ] 02-02: Implement seed script and document migrate/seed commands
+**Wave 1**
+
+- [ ] 02-01-PLAN.md — Prisma 6.19.3 schema, root db:* scripts, Wave 0 schema tests, [BLOCKING] init migration (DATA-01, DATA-02)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 02-02-PLAN.md — bcryptjs idempotent seed, README db workflow, verify-phase2 scripts and tests (DATA-03)
 
 ### Phase 3: Shared Types Pipeline
 

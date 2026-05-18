@@ -530,15 +530,10 @@ In Phase 3, `packages/types` can run generate against:
 | A4 | slopcheck unavailable — all packages `[ASSUMED]` | Package Audit | Human verify before install if desired |
 | A5 | Prisma 6 `migrate reset` still runs seed automatically | Standard Stack / D-30 | If behavior changes in patch, chain `db:seed` after reset |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Primary keys: `cuid()` vs `uuid()` vs autoincrement `Int`?**
-   - What we know: CONTEXT does not lock ID type; all are valid in Prisma + Postgres.
-   - Recommendation: `cuid()` strings — URL-friendly, no sequential leakage; planner picks one and stays consistent.
-
-2. **verify-phase2: SQL vs Prisma CLI?**
-   - What we know: Phase 1 uses Docker `psql` / `pg_isready`; no Prisma in repo yet.
-   - Recommendation: Chain `verify-postgres` + `psql` counts (no extra deps); optional `prisma migrate status` for migration check.
+1. **Primary keys: `cuid()` vs `uuid()` vs autoincrement `Int`?** — **RESOLVED:** `cuid()` on all models (`02-01-PLAN.md` Task 1).
+2. **verify-phase2: SQL vs Prisma CLI?** — **RESOLVED:** Chain `verify-postgres` + Docker `psql` counts (`02-02-PLAN.md` Task 1); `prisma migrate status` in 02-01 for migration check.
 
 ## Environment Availability
 
