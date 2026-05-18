@@ -1,0 +1,27 @@
+{
+  "name": "@kramnik/api",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "start": "node dist/main",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.21",
+    "@nestjs/core": "^11.1.21",
+    "@nestjs/platform-express": "^11.1.21",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.21",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.12.3",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.59.2"
+  }
+}
