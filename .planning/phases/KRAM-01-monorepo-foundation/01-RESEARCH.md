@@ -535,17 +535,11 @@ export function AppShell() {
 | A4 | No `shamefully-hoist` needed for Vite/Nest | pnpm | Add only if tooling breaks (D-04 escape hatch) |
 | A5 | Phase 1 validation can use shell/curl smoke scripts before Vitest | Validation | Nyquist automation partial until Wave 0 |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Exact `@kramnik/web` / `@kramnik/api` package names**  
-   - What we know: `@kramnik/types` is locked.  
-   - What's unclear: Web/API scoped names not in CONTEXT.  
-   - Recommendation: Use `@kramnik/web` and `@kramnik/api` for consistency; lock in PLAN.md.
+1. **Exact `@kramnik/web` / `@kramnik/api` package names** — **RESOLVED:** Use `@kramnik/web` and `@kramnik/api` (locked in `01-01-PLAN.md` Task 3 and `01-02-PLAN.md` Task 1).
 
-2. **Nest CLI interactive prompts on Windows**  
-   - What we know: `nest new` supports `--directory`.  
-   - What's unclear: Best non-interactive flag set in current CLI 11.x.  
-   - Recommendation: Plan task uses `pnpm exec nest new api --directory apps/api --skip-git --package-manager pnpm` [ASSUMED] with fallback manual minimal tree.
+2. **Nest CLI interactive prompts on Windows** — **RESOLVED:** Primary: `pnpm exec nest new api --directory apps/api --skip-git --package-manager pnpm`. Fallback: hand-create minimal Nest tree per RESEARCH Pattern 4 if CLI prompts block automation (`01-02-PLAN.md` Task 1).
 
 ## Environment Availability
 
@@ -684,11 +678,11 @@ export function AppShell() {
 | Architecture | HIGH | Turbo/pnpm patterns cited; codebase audited |
 | Pitfalls | HIGH | PITFALLS §5 + migration inventory completed |
 
-### Open Questions
+### Open Questions (RESOLVED)
 
-- Confirm `@kramnik/web` / `@kramnik/api` package names in PLAN.md.
-- Verify Nest CLI non-interactive scaffold flags on Windows during execution.
+- `@kramnik/web` / `@kramnik/api` — locked in plans 01-01 and 01-02.
+- Nest CLI — `nest new` with `--directory apps/api` + manual fallback documented in 01-02.
 
 ### Ready for Planning
 
-Research complete. Planner can now create PLAN.md files (01-01, 01-02, 01-03).
+Research complete. Plans 01-01, 01-02, 01-03 created and verified.
