@@ -71,7 +71,7 @@ Plans:
 **Goal:** Deliver read-only product REST endpoints with Nest module structure and validation patterns.
 **Mode:** mvp
 **Depends on:** Phase 3
-**Requirements:** AUTH-05 (partial — public routes only; JWT infrastructure stub ok), CAT-04 (backend half)
+**Requirements:** (none — prepares for Phase 5; public read endpoints only)
 **UI hint:** no
 **Success Criteria**:
   1. `GET /products` supports listing with optional filter query params

@@ -102,7 +102,7 @@
 | CAT-01 | Phase 5 | Pending |
 | CAT-02 | Phase 5 | Pending |
 | CAT-03 | Phase 5 | Pending |
-| AUTH-05 | Phase 4 | Pending |
+| AUTH-05 | Phase 6 | Pending |
 | AUTH-01 | Phase 6 | Pending |
 | AUTH-02 | Phase 6 | Pending |
 | AUTH-03 | Phase 6 | Pending |
