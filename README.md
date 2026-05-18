@@ -1,73 +1,54 @@
-# React + TypeScript + Vite
+# Kramnik Shop
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Learning e-commerce monorepo: React (Vite) storefront, NestJS API, PostgreSQL via Docker, and shared TypeScript types.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. **Enable pnpm:** `corepack enable` then `corepack prepare pnpm@9.15.9 --activate`
+2. **Install:** `pnpm install`
+3. **Database:** `pnpm db:up` — starts PostgreSQL in Docker (not required until Phase 2 API/DB work, but required for FOUND-03)
+4. **API env (optional):** copy `apps/api/.env.example` to `apps/api/.env` when working with the API or database
+5. **Run apps:** `pnpm dev` — runs `turbo dev`, which builds `@kramnik/types` then starts web and API together
 
-## React Compiler
+`pnpm dev` and `turbo dev` **do not start PostgreSQL**. Start the database separately with `pnpm db:up` before you need `shop_dev`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Ports
 
-## Expanding the ESLint configuration
+| Service | Port |
+|---------|------|
+| Web (Vite) | **5173** |
+| API (Nest) | **3000** |
+| PostgreSQL | **5432** |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Angular background
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+If you have used Angular CLI, `pnpm dev` is similar to running `ng serve` for both the web and API apps in parallel — Turborepo orchestrates the workspace instead of a single `angular.json` project.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Stack mapping and learning goals: see [.planning/PROJECT.md](.planning/PROJECT.md).
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Optional phase gate
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+With the API running and after `pnpm db:up`:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Bash: `bash scripts/verify-phase1.sh`
+- PowerShell: `powershell -File scripts/verify-phase1.ps1`
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Security (dev only)
+
+Docker uses tutorial credentials: user/password `postgres`, database `shop_dev`. These are for local development only — never reuse in production. Port **5432** is published to the host; on shared machines, stop the stack with `pnpm db:down` when finished.
+
+`DATABASE_URL` for the API (matches Docker): `postgresql://postgres:postgres@localhost:5432/shop_dev`
+
+### Port conflicts
+
+If another PostgreSQL instance already binds **5432**, stop the conflicting service. Phase 1 keeps the mapping `5432:5432` per project decisions — do not change it without updating planning docs.
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Turbo dev (web + API after types build) |
+| `pnpm build` | Build all workspace packages |
+| `pnpm db:up` | `docker compose up -d` |
+| `pnpm db:down` | `docker compose down` |
+| `pnpm format` | Prettier format |
