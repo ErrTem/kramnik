@@ -529,9 +529,9 @@ export function AppShell() {
 
 | # | Claim | Section | Risk if Wrong |
 |---|-------|---------|---------------|
-| A1 | Workspace package names `@kramnik/web`, `@kramnik/api` | Structure | Turbo filter strings need updating |
+| A1 | Workspace package names `@kramnik/web`, `@kramnik/api` | Structure | **RESOLVED** — see Open Questions (RESOLVED) §1 |
 | A2 | `postgres:16` image tag | Docker | Minor; 15+ acceptable for learning |
-| A3 | Nest scaffold via `@nestjs/cli` into `apps/api` | API | Manual file layout if CLI flags differ on Windows |
+| A3 | Nest scaffold via `@nestjs/cli` into `apps/api` | API | **RESOLVED** — CLI primary; hand-scaffold fallback per 01-02 Task 1 |
 | A4 | No `shamefully-hoist` needed for Vite/Nest | pnpm | Add only if tooling breaks (D-04 escape hatch) |
 | A5 | Phase 1 validation can use shell/curl smoke scripts before Vitest | Validation | Nyquist automation partial until Wave 0 |
 
@@ -593,7 +593,7 @@ export function AppShell() {
 - [ ] `vitest.config.ts` + `vitest` devDependency at root
 - [ ] `tests/foundation/workspace-layout.test.ts` — FOUND-01 paths
 - [ ] `tests/foundation/turbo-config.test.ts` — parses `turbo.json` for `dependsOn`
-- [ ] `scripts/verify-phase1.ps1` or `.sh` — FOUND-02/03 curl/docker (Windows + Unix note in README)
+- [x] `scripts/verify-phase1.ps1` and `.sh` — planned in 01-03 Task 3; chains API health + postgres checks
 - [ ] `.gitignore` — ensure `apps/api/.env` ignored
 
 ## Security Domain
