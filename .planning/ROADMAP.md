@@ -6,7 +6,7 @@ Build a learning e-commerce store in nine fine-grained vertical phases: monorepo
 
 ## Phases
 
-- [ ] **Phase 1: Monorepo Foundation** — Turborepo workspace, move Vite app to `apps/web`, NestJS shell, Docker Postgres
+- [x] **Phase 1: Monorepo Foundation** — Turborepo workspace, move Vite app to `apps/web`, NestJS shell, Docker Postgres (completed 2026-05-18)
 - [ ] **Phase 2: Prisma Data Model** — Schema, migrations, seed data
 - [ ] **Phase 3: Shared Types Pipeline** — `packages/types` DTOs from Prisma
 - [ ] **Phase 4: Products API** — NestJS products module and public REST reads
@@ -31,7 +31,7 @@ Build a learning e-commerce store in nine fine-grained vertical phases: monorepo
   2. `apps/web` serves the existing Vite React app; `apps/api` starts a NestJS hello/health endpoint
   3. PostgreSQL is reachable via Docker Compose with connection string documented
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 **Wave 1**
@@ -44,7 +44,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-03: Add Docker Compose for Postgres and root README dev instructions
+- [x] 01-03: Add Docker Compose for Postgres and root README dev instructions
 
 ### Phase 2: Prisma Data Model
 
@@ -217,7 +217,7 @@ Phases execute in numeric order: 1 → 2 → … → 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Monorepo Foundation | 2/3 | In Progress|  |
+| 1. Monorepo Foundation | 3/3 | Complete   | 2026-05-18 |
 | 2. Prisma Data Model | 0/2 | Not started | - |
 | 3. Shared Types Pipeline | 0/2 | Not started | - |
 | 4. Products API | 0/2 | Not started | - |
