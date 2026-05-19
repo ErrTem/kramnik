@@ -1,16 +1,34 @@
 # Phase 2: Prisma Data Model - Research
 
 **Researched:** 2026-05-18  
-**Domain:** Prisma ORM 6 + PostgreSQL 16 schema, migrations, and idempotent seed in a pnpm/Turborepo NestJS monorepo  
-**Confidence:** HIGH (schema/workflow locked in CONTEXT; version pin and Nest integration cross-verified against official Prisma docs)
+**Updated:** 2026-05-19 — implemented stack versions (Prisma 7, pnpm 11)  
+**Domain:** Prisma ORM 7 + PostgreSQL 16 schema, migrations, and idempotent seed in a pnpm/Turborepo NestJS monorepo  
+**Confidence:** HIGH (schema/workflow locked in CONTEXT; implementation verified on local `shop_dev`)
 
 ## Summary
 
-Phase 2 introduces Prisma as the single source of truth under `apps/api/prisma/`, with no Nest `PrismaModule` or REST surface yet. The codebase already has Docker Postgres 16 (`shop_dev`), `DATABASE_URL` in `apps/api/.env.example`, and root `pnpm db:up` / `db:down` from Phase 1 — Phase 2 adds schema, initial migration, seed, root `db:*` shortcuts, and verify scripts.
+Phase 2 introduces Prisma as the single source of truth under `apps/api/prisma/`, with no Nest `PrismaModule` or REST surface yet. The codebase has Docker Postgres 16 (`shop_dev`), `DATABASE_URL` in `apps/api/.env.example`, root `pnpm db:up` / `db:down`, and root `db:migrate` / `db:seed` / `db:studio` / `db:reset` / `db:generate`.
 
-**Primary recommendation:** Pin **`prisma` and `@prisma/client` to `6.19.3`** (latest 6.x, matches `.planning/research/STACK.md` and project rules). Use the **Prisma 6** workflow (`url` in `schema.prisma`, `prisma-client-js`, seed via `package.json` → `"prisma"."seed"`, `import { PrismaClient } from '@prisma/client'`). **Do not adopt Prisma 7** in this phase: npm’s current default is 7.8.0, which requires `prisma.config.ts`, driver adapters (`@prisma/adapter-pg`), custom client `output`, ESM-oriented setup, and **explicit** `prisma db seed` after `migrate reset` — all of which conflict with Nest’s current **CommonJS** `apps/api` tsconfig and the locked `db:reset` expectation. [CITED: https://www.prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7]
+**Implemented stack (2026-05-19):**
 
-Phase 3 will consume the same schema path for `packages/types`; Phase 2 should document Decimal → `string` in public JSON (PITFALLS §6) without implementing DTOs.
+| Tool | Version | Notes |
+|------|---------|--------|
+| **pnpm** | **11.1.3** | `packageManager` in root `package.json`; `minimumReleaseAge: 0` in `pnpm-workspace.yaml` |
+| **prisma** / **@prisma/client** | **7.8.0** | D-33 — supersedes original 6.19.3 pin |
+| **@prisma/adapter-pg** / **pg** | **7.8.0** / **8.21.0** | Required for `PrismaClient` in Prisma 7 (seed + future Nest service) |
+| **bcryptjs** | **3.0.3** | Seed password hashing |
+| **tsx** | **4.22.3** | Runs `prisma/seed.ts` |
+| **dotenv** | **17.4.2** | Loads `apps/api/.env` for CLI and seed |
+| **turbo** | **2.9.14** | Monorepo tasks |
+| **vitest** | **4.1.6** | Static schema/seed/README tests |
+| **typescript** | **~6.0.3** | Workspace |
+| **NestJS** | **11.1.x** | API app (unchanged in Phase 2) |
+
+**Prisma 7 workflow in repo:** `apps/api/prisma.config.ts` (datasource URL, migrations path, seed command); `schema.prisma` without `url` in datasource block; `prisma-client-js` generator; seed and runtime client use **`new PrismaClient({ adapter: new PrismaPg({ connectionString }) })`**. After `pnpm db:reset`, run **`pnpm db:seed` explicitly** (v7 does not auto-seed on reset). [CITED: Prisma 7 upgrade guide]
+
+**Original planner note (superseded):** Research initially recommended Prisma **6.19.3** to avoid adapter/config churn with Nest CJS. Implementation chose **7.8.0** per D-33; Phase 4 `PrismaService` must mirror seed adapter setup.
+
+Phase 3 will consume `apps/api/prisma/schema.prisma` for `packages/types`; Phase 2 documents Decimal → `string` in public JSON (PITFALLS §6) in README — DTOs in Phase 3.
 
 <user_constraints>
 ## User Constraints (from CONTEXT.md)
@@ -100,31 +118,37 @@ None — discussion stayed within phase scope.
 
 | Library | Version | Purpose | Why Standard |
 |---------|---------|---------|--------------|
-| `prisma` | **6.19.3** (pin) | CLI: migrate, generate, studio, db seed | Matches STACK.md; avoids Prisma 7 breaking changes with Nest CJS [CITED: upgrade guide] |
-| `@prisma/client` | **6.19.3** (pin) | Generated ORM client | Must match `prisma` version exactly |
-| `bcryptjs` | **3.0.3** | Password hashing in seed | Pure JS; no native build on Windows (user discretion) |
-| PostgreSQL | **16** (Docker) | Database | Already in `docker-compose.yml` |
+| `prisma` | **7.8.0** | CLI: migrate, generate, studio, db seed | Implemented (D-33) |
+| `@prisma/client` | **7.8.0** | Generated ORM client | Must match `prisma` version |
+| `@prisma/adapter-pg` | **7.8.0** | Postgres driver adapter for Prisma 7 | Required in seed; Phase 4 Nest service |
+| `pg` | **8.21.0** | node-postgres driver | Peer of adapter-pg |
+| `bcryptjs` | **3.0.3** | Password hashing in seed | Pure JS; Windows-friendly |
+| PostgreSQL | **16** (Docker) | Database | `docker-compose.yml` |
+| `pnpm` | **11.1.3** | Workspace package manager | Corepack; see `pnpm-workspace.yaml` |
 
 ### Supporting
 
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
-| `tsx` | **4.22.2** | Run `prisma/seed.ts` | Registered in `prisma.seed` script |
-| `dotenv` | latest compatible | Optional explicit env load in seed | If `exec prisma` cwd/env edge cases on Windows |
+| `tsx` | **4.22.3** | Run `prisma/seed.ts` | `prisma.config.ts` + `package.json` `prisma.seed` |
+| `dotenv` | **17.4.2** | Load `apps/api/.env` | Prisma 7 CLI does not auto-load env |
+| `turbo` | **2.9.14** | `pnpm dev` / `build` | Root devDependencies |
+| `vitest` | **4.1.6** | Phase 2 static tests | Root |
 
 ### Alternatives Considered
 
 | Instead of | Could Use | Tradeoff |
 |------------|-----------|----------|
-| Prisma 6.19.3 | Prisma 7.8.0 (npm latest) | v7 needs adapters, `prisma.config.ts`, ESM-friendly package setup, manual seed after reset; poor fit for Phase 2 scope |
+| Prisma 7.8.0 | Prisma 6.19.3 | v6 simpler `PrismaClient()` without adapter; original planner default |
 | `bcryptjs` | `bcrypt` | Faster on Linux; native module compile pain on Windows |
 | `packages/database` | `apps/api/prisma/` | User locked api-local schema (D-01) |
+| pnpm 11 | pnpm 9 | v11 adds `minimumReleaseAge`, `allowBuilds`; repo sets `minimumReleaseAge: 0` |
 
-**Installation (apps/api):**
+**Installation (apps/api, as implemented):**
 
 ```bash
-pnpm --filter @kramnik/api add @prisma/client@6.19.3 bcryptjs
-pnpm --filter @kramnik/api add -D prisma@6.19.3 tsx
+pnpm --filter @kramnik/api add @prisma/client@7.8.0 @prisma/adapter-pg pg bcryptjs dotenv
+pnpm --filter @kramnik/api add -D prisma@7.8.0 tsx @types/pg
 ```
 
 **Root package.json scripts (delegate to api workspace):**

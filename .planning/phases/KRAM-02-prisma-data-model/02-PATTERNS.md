@@ -65,7 +65,7 @@
   },
 ```
 
-**Add Prisma 6 wiring** (from `02-RESEARCH.md` Pattern 3 — pin `6.19.3`, not `latest`):
+**Add Prisma 7 wiring** (implemented — D-33):
 
 ```json
 {
@@ -73,12 +73,15 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "6.19.3",
-    "bcryptjs": "3.0.3"
+    "@prisma/client": "^7.8.0",
+    "@prisma/adapter-pg": "^7.8.0",
+    "pg": "^8.21.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2"
   },
   "devDependencies": {
-    "prisma": "6.19.3",
-    "tsx": "4.22.2"
+    "prisma": "^7.8.0",
+    "tsx": "^4.22.3"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -86,11 +89,13 @@
 }
 ```
 
-**Install commands** (research):
+Plus `apps/api/prisma.config.ts` for datasource URL and migrations. Seed uses `PrismaPg` adapter (see `seed.ts`).
+
+**Install commands** (as implemented):
 
 ```bash
-pnpm --filter @kramnik/api add @prisma/client@6.19.3 bcryptjs
-pnpm --filter @kramnik/api add -D prisma@6.19.3 tsx
+pnpm --filter @kramnik/api add @prisma/client@7.8.0 @prisma/adapter-pg pg bcryptjs dotenv
+pnpm --filter @kramnik/api add -D prisma@7.8.0 tsx @types/pg
 ```
 
 ---

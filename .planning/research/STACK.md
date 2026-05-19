@@ -10,7 +10,7 @@
 | Tool | Version guidance | Purpose |
 |------|------------------|---------|
 | **Turborepo** | Latest stable | Task orchestration, `dev`/`build` pipelines across apps/packages |
-| **pnpm** | 9+ | Fast workspace installs; strict dependency hoisting for monorepos |
+| **pnpm** | **11.1.3** (repo pin via Corepack) | Fast workspace installs; strict dependency hoisting for monorepos |
 
 **Not Nx for v1:** Nx is powerful but adds generators, plugins, and mental overhead. Turborepo + explicit folder structure is enough for a learning project.
 
@@ -46,7 +46,7 @@ packages/
 | NestJS 11 | Modules, controllers, services, DTOs (Angular-like structure) |
 | `@nestjs/jwt` + `@nestjs/passport` | JWT auth |
 | `class-validator` + `class-transformer` | DTO validation at boundary |
-| Prisma 6 | ORM, migrations, generated client |
+| Prisma **7.8** + `@prisma/adapter-pg` | ORM, migrations, generated client (`prisma.config.ts` in `apps/api`) |
 | PostgreSQL 16+ | Database (Docker Compose for local dev) |
 
 ### Types pipeline (`packages/types`)

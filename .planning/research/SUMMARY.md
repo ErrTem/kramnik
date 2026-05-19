@@ -17,7 +17,7 @@ Main risks are type duplication, mixing server state into Zustand, and phases th
 
 ### Recommended Stack
 
-Turborepo + pnpm, React 19/Vite 8, Tailwind 4, Zustand, TanStack Query v5, NestJS 11, Prisma 6, PostgreSQL via Docker. Shared types package is non-negotiable for the core value proposition.
+Turborepo + **pnpm 11.1.3**, React 19/Vite 8, Tailwind 4, Zustand, TanStack Query v5, NestJS 11, **Prisma 7.8** (+ `@prisma/adapter-pg`), PostgreSQL 16 via Docker. Shared types package is non-negotiable for the core value proposition. Phase 2 implemented schema, migrations, and seed under `apps/api/prisma/`.
 
 ### Expected Features (v1)
 
