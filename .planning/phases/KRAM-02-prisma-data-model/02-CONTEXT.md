@@ -1,6 +1,7 @@
 # Phase 2: Prisma Data Model - Context
 
 **Gathered:** 2026-05-18
+**Updated:** 2026-05-19 — Prisma version (D-33)
 **Status:** Ready for planning
 
 <domain>
@@ -14,6 +15,9 @@ Phase 2 does **not** implement Nest `PrismaModule`, REST endpoints, `packages/ty
 
 <decisions>
 ## Implementation Decisions
+
+### Prisma version (implementer override)
+- **D-33:** Use **latest Prisma 7** in `apps/api` — `prisma` and `@prisma/client` **`^7.8.0`** (matching lockfile at install time). **Supersedes** original planner/research pin **6.19.3**. If the CLI requires it, add **`prisma.config.ts`** and follow [Prisma 7 upgrade docs](https://www.prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7) (datasource URL, seed, `db:reset` behavior may differ from Prisma 6).
 
 ### Prisma layout & tooling
 - **D-01:** `schema.prisma` and migrations live under **`apps/api/prisma/`** (not `packages/database`).
@@ -81,7 +85,7 @@ Phase 2 does **not** implement Nest `PrismaModule`, REST endpoints, `packages/ty
 - `.planning/PROJECT.md` — Schema-first pipeline, Prisma-only types, out-of-scope auth/payments
 
 ### Research
-- `.planning/research/STACK.md` — Prisma 6, optional `packages/database` vs api-local schema (chose api-local per D-01)
+- `.planning/research/STACK.md` — originally Prisma 6; **Phase 2 implementation uses Prisma 7 per D-33**; api-local schema (D-01)
 - `.planning/research/ARCHITECTURE.md` — Entity relations, checkout data flow, type safety chain
 - `.planning/research/PITFALLS.md` — §1 duplicate types (Phase 3), §6 Decimal JSON serialization (D-15), §7 admin seed user
 
