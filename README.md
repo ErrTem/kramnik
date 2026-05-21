@@ -32,9 +32,18 @@ If you have used Angular CLI, `pnpm dev` is similar to running `ng serve` for bo
 
 Stack mapping and learning goals: see [.planning/PROJECT.md](.planning/PROJECT.md).
 
-### Phase 3 types (preview)
+### Shared types (`@kramnik/types`)
 
-`packages/types` will generate shared DTOs from `apps/api/prisma/schema.prisma` in a later phase. Public JSON should expose money fields as **strings** (not raw Prisma `Decimal`) — see planning pitfalls for Decimal serialization.
+DTOs are derived from Prisma models in `apps/api/prisma/schema.prisma` — **do not** hand-write `interface Product` or `interface User` in `apps/web` or `apps/api`.
+
+| Export | Purpose |
+|--------|---------|
+| `ProductPublic` | Catalog — Prisma `Decimal` **price** serialized as **string** in JSON |
+| `UserPublic` | Profile — omits `passwordHash` |
+| `OrderPublic` / `OrderItemPublic` | Checkout (later phases) — money as strings |
+| `toProductPublic`, `toUserPublic`, … | Map Prisma rows → public DTOs |
+
+Build types before dev: `pnpm --filter @kramnik/types build` (also runs via `turbo dev`).
 
 ### Optional phase gates
 

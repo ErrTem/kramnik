@@ -8,7 +8,7 @@ Build a learning e-commerce store in nine fine-grained vertical phases: monorepo
 
 - [x] **Phase 1: Monorepo Foundation** — Turborepo workspace, move Vite app to `apps/web`, NestJS shell, Docker Postgres (completed 2026-05-18)
 - [ ] **Phase 2: Prisma Data Model** — Schema, migrations, seed data
-- [ ] **Phase 3: Shared Types Pipeline** — `packages/types` DTOs from Prisma
+- [x] **Phase 3: Shared Types Pipeline** — `packages/types` DTOs from Prisma
 - [ ] **Phase 4: Products API** — NestJS products module and public REST reads
 - [ ] **Phase 5: Catalog UI** — React shell, routing, list/filter/detail with TanStack Query
 - [ ] **Phase 6: Authentication** — JWT register/login on API and web
@@ -88,8 +88,8 @@ Plans:
 
 Plans:
 
-- [ ] 03-01: Create `packages/types` with Prisma utility-type DTOs and build config
-- [ ] 03-02: Wire workspace dependencies and verify typecheck across apps
+- [x] 03-01: Create `packages/types` with Prisma utility-type DTOs and build config
+- [x] 03-02: Wire workspace dependencies and verify typecheck across apps
 
 ### Phase 4: Products API
 

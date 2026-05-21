@@ -16,8 +16,8 @@
 - [ ] **DATA-01**: `schema.prisma` defines User, Product, Order, and OrderItem (and any supporting enums/roles)
 - [ ] **DATA-02**: Prisma migrations apply cleanly on a fresh database
 - [ ] **DATA-03**: Seed script populates sample products (and an admin user)
-- [ ] **TYPE-01**: `packages/types` exports frontend-safe DTOs derived from Prisma types (Omit/Pick/Partial)
-- [ ] **TYPE-02**: Web and API import shared types without duplicating model interfaces
+- [x] **TYPE-01**: `packages/types` exports frontend-safe DTOs derived from Prisma types (Omit/Pick/Partial)
+- [x] **TYPE-02**: Web and API import shared types without duplicating model interfaces
 
 ### Product Catalog
 
@@ -96,8 +96,8 @@
 | DATA-01 | Phase 2 | Pending |
 | DATA-02 | Phase 2 | Pending |
 | DATA-03 | Phase 2 | Pending |
-| TYPE-01 | Phase 3 | Pending |
-| TYPE-02 | Phase 3 | Pending |
+| TYPE-01 | Phase 3 | Complete |
+| TYPE-02 | Phase 3 | Complete |
 | CAT-04 | Phase 5 | Pending |
 | CAT-01 | Phase 5 | Pending |
 | CAT-02 | Phase 5 | Pending |
