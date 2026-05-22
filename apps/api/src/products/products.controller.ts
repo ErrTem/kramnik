@@ -1,6 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common'
+import { Controller, Get, Param, Query } from '@nestjs/common'
 import type { ProductPublic } from '@kramnik/types'
 
+import { ListProductsQueryDto } from './dto/list-products-query.dto'
 import { ProductsService } from './products.service'
 
 @Controller('products')
@@ -8,8 +9,8 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  findAll(): Promise<ProductPublic[]> {
-    return this.productsService.findAll()
+  findAll(@Query() query: ListProductsQueryDto): Promise<ProductPublic[]> {
+    return this.productsService.findAll(query)
   }
 
   @Get(':id')
