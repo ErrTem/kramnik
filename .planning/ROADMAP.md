@@ -128,8 +128,16 @@ Plans:
 
 Plans:
 
+**Wave 1**
+
 - [ ] 05-01: App shell, React Router routes, Tailwind layout, QueryClient provider
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 05-02: Product list page with `useQuery` and filter UI
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
 - [ ] 05-03: Product detail page and shared API client module
 
 ### Phase 6: Authentication
