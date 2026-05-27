@@ -1,6 +1,6 @@
+import type { Category } from '@kramnik/types'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import type { Category } from '@kramnik/types'
 
 import type { ProductListParams } from '../../shared/api/products.ts'
 import { categoryLabel } from '../../shared/lib/categoryLabel.ts'
@@ -12,7 +12,7 @@ const CATEGORIES: Category[] = [
   'GARDEN_GNOMES',
 ]
 
-const DEBOUNCE_MS = 300
+const DEBOUNCE_MS = 1000
 
 function isCategory(value: string): value is Category {
   return (CATEGORIES as string[]).includes(value)
@@ -77,6 +77,15 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
     [onFiltersChange, setSearchParams],
   )
 
+
+  const resetFilters = (): void => {
+    setCategory('')
+    setQInput('')
+    setMinPrice('')
+    setMaxPrice('')
+    commit({})
+  }
+
   const commitFromInputs = useCallback(() => {
     commit(filtersFromInputs(category, qInput, minPrice, maxPrice))
   }, [category, qInput, minPrice, maxPrice, commit])
@@ -104,7 +113,25 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
     return () => window.clearTimeout(handle)
   }, [qInput, commitFromInputs])
 
+  useEffect(() => {
+    const handle = window.setTimeout(commitFromInputs, DEBOUNCE_MS)
+    return () => window.clearTimeout(handle)
+  }, [minPrice, maxPrice, commitFromInputs])
+
+  const handlePriceChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: 'min' | 'max',
+  ) => {
+    const val = e.target.value
+    // allow empty or digits only (no decimals)
+    if (val === '' || /^[0-9]+$/.test(val)) {
+      if (type === 'min') setMinPrice(val)
+      else setMaxPrice(val)
+    }
+  }
+
   return (
+
     <div className="mb-6 flex flex-wrap items-end gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
       <label className="flex min-w-[10rem] flex-col gap-1 text-sm">
         <span className="font-medium text-gray-700">Category</span>
@@ -143,14 +170,10 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
         <span className="font-medium text-gray-700">Min price</span>
         <input
           type="text"
-          inputMode="decimal"
+          inputMode="numeric"
           className="rounded border border-gray-300 px-2 py-1.5 focus-visible:ring-2 focus-visible:ring-blue-500"
           value={minPrice}
-          onChange={(e) => {
-            const value = e.target.value
-            setMinPrice(value)
-            commit(filtersFromInputs(category, qInput, value, maxPrice))
-          }}
+          onChange={(e) => {handlePriceChange(e, 'min')}}
         />
       </label>
 
@@ -158,16 +181,21 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
         <span className="font-medium text-gray-700">Max price</span>
         <input
           type="text"
-          inputMode="decimal"
+          inputMode="numeric"
           className="rounded border border-gray-300 px-2 py-1.5 focus-visible:ring-2 focus-visible:ring-blue-500"
           value={maxPrice}
-          onChange={(e) => {
-            const value = e.target.value
-            setMaxPrice(value)
-            commit(filtersFromInputs(category, qInput, minPrice, value))
-          }}
+          onChange={(e) => {handlePriceChange(e, 'max')}}
         />
       </label>
+
+
+        <button 
+        type="button"
+        onClick={resetFilters}
+        disabled={!category && !qInput && !minPrice && !maxPrice}
+         className="ml-auto rounded border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50">
+          Reset
+          </button>
     </div>
   )
 }
