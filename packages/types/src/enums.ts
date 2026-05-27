@@ -1,1 +1,1 @@
-export { Category, OrderStatus, Role } from '@prisma/client'
+export { Category, OrderStatus, Role } from '@prisma/client';

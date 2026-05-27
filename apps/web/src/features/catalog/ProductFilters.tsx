@@ -1,41 +1,35 @@
-import type { Category } from '@kramnik/types'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import type { Category } from '@kramnik/types';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
-import type { ProductListParams } from '../../shared/api/products.ts'
-import { categoryLabel } from '../../shared/lib/categoryLabel.ts'
+import type { ProductListParams } from '../../shared/api/products.ts';
+import { categoryLabel } from '../../shared/lib/categoryLabel.ts';
 
-const CATEGORIES: Category[] = [
-  'HOME',
-  'GARBAGE',
-  'SCRAPS',
-  'GARDEN_GNOMES',
-]
+const CATEGORIES: Category[] = ['HOME', 'GARBAGE', 'SCRAPS', 'GARDEN_GNOMES'];
 
-const DEBOUNCE_MS = 1000
+const DEBOUNCE_MS = 1000;
 
 function isCategory(value: string): value is Category {
-  return (CATEGORIES as string[]).includes(value)
+  return (CATEGORIES as string[]).includes(value);
 }
 
 function parseFiltersFromUrl(params: URLSearchParams): ProductListParams {
-  const categoryRaw = params.get('category')
+  const categoryRaw = params.get('category');
   return {
-    category:
-      categoryRaw && isCategory(categoryRaw) ? categoryRaw : undefined,
+    category: categoryRaw && isCategory(categoryRaw) ? categoryRaw : undefined,
     q: params.get('q') ?? undefined,
     minPrice: params.get('minPrice') ?? undefined,
     maxPrice: params.get('maxPrice') ?? undefined,
-  }
+  };
 }
 
 function filtersToUrlParams(filters: ProductListParams): URLSearchParams {
-  const next = new URLSearchParams()
-  if (filters.category) next.set('category', filters.category)
-  if (filters.q?.trim()) next.set('q', filters.q.trim())
-  if (filters.minPrice) next.set('minPrice', filters.minPrice)
-  if (filters.maxPrice) next.set('maxPrice', filters.maxPrice)
-  return next
+  const next = new URLSearchParams();
+  if (filters.category) next.set('category', filters.category);
+  if (filters.q?.trim()) next.set('q', filters.q.trim());
+  if (filters.minPrice) next.set('minPrice', filters.minPrice);
+  if (filters.maxPrice) next.set('maxPrice', filters.maxPrice);
+  return next;
 }
 
 function filtersFromInputs(
@@ -49,89 +43,100 @@ function filtersFromInputs(
     q: qInput.trim() || undefined,
     minPrice: minPrice || undefined,
     maxPrice: maxPrice || undefined,
-  }
+  };
 }
 
 type ProductFiltersProps = {
-  onFiltersChange: (filters: ProductListParams) => void
-}
+  onFiltersChange: (filters: ProductListParams) => void;
+};
 
 export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const initial = parseFiltersFromUrl(searchParams)
-  const [category, setCategory] = useState(initial.category ?? '')
-  const [qInput, setQInput] = useState(initial.q ?? '')
-  const [minPrice, setMinPrice] = useState(initial.minPrice ?? '')
-  const [maxPrice, setMaxPrice] = useState(initial.maxPrice ?? '')
+  const initial = parseFiltersFromUrl(searchParams);
+  const [category, setCategory] = useState(initial.category ?? '');
+  const [qInput, setQInput] = useState(initial.q ?? '');
+  const [minPrice, setMinPrice] = useState(initial.minPrice ?? '');
+  const [maxPrice, setMaxPrice] = useState(initial.maxPrice ?? '');
+  const [maxPriceError, setMaxPriceError] = useState(false);
 
-  const lastSyncedUrl = useRef(searchParams.toString())
+  const lastSyncedUrl = useRef(searchParams.toString());
 
   const commit = useCallback(
     (filters: ProductListParams) => {
-      const nextUrl = filtersToUrlParams(filters).toString()
-      lastSyncedUrl.current = nextUrl
-      setSearchParams(filtersToUrlParams(filters), { replace: true })
-      onFiltersChange(filters)
+      const nextUrl = filtersToUrlParams(filters).toString();
+      lastSyncedUrl.current = nextUrl;
+      setSearchParams(filtersToUrlParams(filters), { replace: true });
+      onFiltersChange(filters);
     },
     [onFiltersChange, setSearchParams],
-  )
-
+  );
 
   const resetFilters = (): void => {
-    setCategory('')
-    setQInput('')
-    setMinPrice('')
-    setMaxPrice('')
-    commit({})
-  }
+    setCategory('');
+    setQInput('');
+    setMinPrice('');
+    setMaxPrice('');
+    commit({});
+  };
 
   const commitFromInputs = useCallback(() => {
-    commit(filtersFromInputs(category, qInput, minPrice, maxPrice))
-  }, [category, qInput, minPrice, maxPrice, commit])
+    commit(filtersFromInputs(category, qInput, minPrice, maxPrice));
+  }, [category, qInput, minPrice, maxPrice, commit]);
 
   useEffect(() => {
-    onFiltersChange(initial)
+    onFiltersChange(initial);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
-  }, [])
+  }, []);
 
   useEffect(() => {
-    const current = searchParams.toString()
-    if (current === lastSyncedUrl.current) return
+    const current = searchParams.toString();
+    if (current === lastSyncedUrl.current) return;
 
-    const parsed = parseFiltersFromUrl(searchParams)
-    setCategory(parsed.category ?? '')
-    setQInput(parsed.q ?? '')
-    setMinPrice(parsed.minPrice ?? '')
-    setMaxPrice(parsed.maxPrice ?? '')
-    lastSyncedUrl.current = current
-    onFiltersChange(parsed)
-  }, [searchParams, onFiltersChange])
-
-  useEffect(() => {
-    const handle = window.setTimeout(commitFromInputs, DEBOUNCE_MS)
-    return () => window.clearTimeout(handle)
-  }, [qInput, commitFromInputs])
+    const parsed = parseFiltersFromUrl(searchParams);
+    setCategory(parsed.category ?? '');
+    setQInput(parsed.q ?? '');
+    setMinPrice(parsed.minPrice ?? '');
+    setMaxPrice(parsed.maxPrice ?? '');
+    lastSyncedUrl.current = current;
+    onFiltersChange(parsed);
+  }, [searchParams, onFiltersChange]);
 
   useEffect(() => {
-    const handle = window.setTimeout(commitFromInputs, DEBOUNCE_MS)
-    return () => window.clearTimeout(handle)
-  }, [minPrice, maxPrice, commitFromInputs])
+    const handle = window.setTimeout(commitFromInputs, DEBOUNCE_MS);
+    return () => window.clearTimeout(handle);
+  }, [qInput, commitFromInputs]);
+
+  useEffect(() => {
+    const handle = window.setTimeout(commitFromInputs, DEBOUNCE_MS);
+    return () => window.clearTimeout(handle);
+  }, [minPrice, maxPrice, commitFromInputs]);
 
   const handlePriceChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     type: 'min' | 'max',
   ) => {
-    const val = e.target.value
-    // allow empty or digits only (no decimals)
+    const val = e.target.value;
     if (val === '' || /^[0-9]+$/.test(val)) {
-      if (type === 'min') setMinPrice(val)
-      else setMaxPrice(val)
+      if (type === 'min') setMinPrice(val);
+      else {
+        setMaxPrice(val);
+      }
     }
-  }
+  };
+
+  useEffect(() => {
+    if (!minPrice || !maxPrice) {
+      setMaxPriceError(false);
+      return;
+    }
+
+    const min = Number(minPrice);
+    const max = Number(maxPrice);
+    setMaxPriceError(Number.isFinite(min) && Number.isFinite(max) && min > max);
+  }, [minPrice, maxPrice]);
 
   return (
-
     <div className="mb-6 flex flex-wrap items-end gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
       <label className="flex min-w-[10rem] flex-col gap-1 text-sm">
         <span className="font-medium text-gray-700">Category</span>
@@ -139,16 +144,17 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
           className="rounded border border-gray-300 px-2 py-1.5 focus-visible:ring-2 focus-visible:ring-blue-500"
           value={category}
           onChange={(e) => {
-            const value = e.target.value
-            setCategory(value)
-            commit(
-              filtersFromInputs(value, qInput, minPrice, maxPrice),
-            )
+            const value = e.target.value;
+            setCategory(value);
+            commit(filtersFromInputs(value, qInput, minPrice, maxPrice));
           }}
         >
           <option value="">All categories</option>
           {CATEGORIES.map((c) => (
-            <option key={c} value={c}>
+            <option
+              key={c}
+              value={c}
+            >
               {categoryLabel(c)}
             </option>
           ))}
@@ -171,9 +177,13 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
         <input
           type="text"
           inputMode="numeric"
-          className="rounded border border-gray-300 px-2 py-1.5 focus-visible:ring-2 focus-visible:ring-blue-500"
+          className={`rounded border px-2 py-1.5 focus-visible:ring-2 focus-visible:ring-blue-500 ${
+            maxPriceError ? 'border-red-400' : 'border-gray-300'
+          }`}
           value={minPrice}
-          onChange={(e) => {handlePriceChange(e, 'min')}}
+          onChange={(e) => {
+            handlePriceChange(e, 'min');
+          }}
         />
       </label>
 
@@ -182,20 +192,24 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
         <input
           type="text"
           inputMode="numeric"
-          className="rounded border border-gray-300 px-2 py-1.5 focus-visible:ring-2 focus-visible:ring-blue-500"
+          className={`rounded border px-2 py-1.5 focus-visible:ring-2 focus-visible:ring-blue-500 ${
+            maxPriceError ? 'border-red-400' : 'border-gray-300'
+          }`}
           value={maxPrice}
-          onChange={(e) => {handlePriceChange(e, 'max')}}
+          onChange={(e) => {
+            handlePriceChange(e, 'max');
+          }}
         />
       </label>
 
-
-        <button 
+      <button
         type="button"
         onClick={resetFilters}
         disabled={!category && !qInput && !minPrice && !maxPrice}
-         className="ml-auto rounded border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50">
-          Reset
-          </button>
+        className="ml-auto rounded border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none disabled:opacity-50"
+      >
+        Reset
+      </button>
     </div>
-  )
+  );
 }

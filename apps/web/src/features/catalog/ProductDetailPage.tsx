@@ -1,15 +1,15 @@
-import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 
-import { fetchProduct } from '../../shared/api/products.ts'
-import { formatPrice } from '../../shared/lib/formatPrice.ts'
-import { categoryLabel } from '../../shared/lib/categoryLabel.ts'
+import { fetchProduct } from '../../shared/api/products.ts';
+import { formatPrice } from '../../shared/lib/formatPrice.ts';
+import { categoryLabel } from '../../shared/lib/categoryLabel.ts';
 
 function isNotFoundError(error: unknown): boolean {
-  if (!(error instanceof Error)) return false
-  const msg = error.message.toLowerCase()
-  return msg.startsWith('404') || msg.includes('not found')
+  if (!(error instanceof Error)) return false;
+  const msg = error.message.toLowerCase();
+  return msg.startsWith('404') || msg.includes('not found');
 }
 
 function ProductDetailSkeleton() {
@@ -27,27 +27,33 @@ function ProductDetailSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function ProductDetailPage() {
-  const { id } = useParams()
-  const productId = id ?? ''
+  const { id } = useParams();
+  const productId = id ?? '';
 
-  const { data: product, isPending, isError, error, refetch, isSuccess } =
-    useQuery({
-      queryKey: ['products', productId],
-      queryFn: () => fetchProduct(productId),
-      enabled: Boolean(productId),
-    })
+  const {
+    data: product,
+    isPending,
+    isError,
+    error,
+    refetch,
+    isSuccess,
+  } = useQuery({
+    queryKey: ['products', productId],
+    queryFn: () => fetchProduct(productId),
+    enabled: Boolean(productId),
+  });
 
-  const [imageFailed, setImageFailed] = useState(false)
+  const [imageFailed, setImageFailed] = useState(false);
 
   useEffect(() => {
-    setImageFailed(false)
-  }, [product?.id])
+    setImageFailed(false);
+  }, [product?.id]);
 
-  const showImage = product?.imageUrl && !imageFailed
+  const showImage = product?.imageUrl && !imageFailed;
 
   if (!productId) {
     return (
@@ -59,18 +65,21 @@ export function ProductDetailPage() {
           ← Back to products
         </Link>
         <p className="text-gray-600">Product not found.</p>
-        <Link to="/products" className="mt-2 inline-block text-blue-600 underline">
+        <Link
+          to="/products"
+          className="mt-2 inline-block text-blue-600 underline"
+        >
           Browse all products
         </Link>
       </section>
-    )
+    );
   }
 
   return (
     <section>
       <Link
         to="/products"
-        className="mb-6 inline-block text-sm text-blue-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        className="mb-6 inline-block text-sm text-blue-600 hover:underline focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
       >
         ← Back to products
       </Link>
@@ -99,12 +108,14 @@ export function ProductDetailPage() {
             <>
               <p className="font-medium">Could not load product</p>
               <p className="mt-1 text-sm">
-                {error instanceof Error ? error.message : 'Something went wrong'}
+                {error instanceof Error
+                  ? error.message
+                  : 'Something went wrong'}
               </p>
               <button
                 type="button"
                 onClick={() => refetch()}
-                className="mt-3 rounded bg-red-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+                className="mt-3 rounded bg-red-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-800 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 Retry
               </button>
@@ -134,11 +145,15 @@ export function ProductDetailPage() {
             <span className="inline-block rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
               {categoryLabel(product.category)}
             </span>
-            <h1 className="mt-3 text-2xl font-bold text-gray-900">{product.name}</h1>
+            <h1 className="mt-3 text-2xl font-bold text-gray-900">
+              {product.name}
+            </h1>
             <p className="mt-2 text-2xl font-semibold text-gray-900">
               {formatPrice(product.price)}
             </p>
-            <p className="mt-6 leading-relaxed text-gray-700">{product.description}</p>
+            <p className="mt-6 leading-relaxed text-gray-700">
+              {product.description}
+            </p>
 
             <button
               type="button"
@@ -155,5 +170,5 @@ export function ProductDetailPage() {
         </article>
       )}
     </section>
-  )
+  );
 }

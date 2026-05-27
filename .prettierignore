@@ -1,0 +1,7 @@
+.planning/
+packages/types/showconfig.json
+node_modules/
+dist/
+build/
+coverage/
+pnpm-lock.yaml
