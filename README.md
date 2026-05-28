@@ -20,8 +20,8 @@ Optional: `pnpm db:studio` — browser UI to browse/edit tables. Optional: `pnpm
 
 ### Ports
 
-| Service | Port |
-|---------|------|
+| Service    | Port     |
+| ---------- | -------- |
 | Web (Vite) | **5173** |
 | API (Nest) | **3000** |
 | PostgreSQL | **5432** |
@@ -36,12 +36,12 @@ Stack mapping and learning goals: see [.planning/PROJECT.md](.planning/PROJECT.m
 
 DTOs are derived from Prisma models in `apps/api/prisma/schema.prisma` — **do not** hand-write `interface Product` or `interface User` in `apps/web` or `apps/api`.
 
-| Export | Purpose |
-|--------|---------|
-| `ProductPublic` | Catalog — Prisma `Decimal` **price** serialized as **string** in JSON |
-| `UserPublic` | Profile — omits `passwordHash` |
-| `OrderPublic` / `OrderItemPublic` | Checkout (later phases) — money as strings |
-| `toProductPublic`, `toUserPublic`, … | Map Prisma rows → public DTOs |
+| Export                               | Purpose                                                               |
+| ------------------------------------ | --------------------------------------------------------------------- |
+| `ProductPublic`                      | Catalog — Prisma `Decimal` **price** serialized as **string** in JSON |
+| `UserPublic`                         | Profile — omits `passwordHash`                                        |
+| `OrderPublic` / `OrderItemPublic`    | Checkout (later phases) — money as strings                            |
+| `toProductPublic`, `toUserPublic`, … | Map Prisma rows → public DTOs                                         |
 
 Build types before dev: `pnpm --filter @kramnik/types build` (also runs via `turbo dev`).
 
@@ -67,9 +67,9 @@ Docker uses tutorial credentials: user/password `postgres`, database `shop_dev`.
 
 Tutorial passwords for local auth testing — **never use in production**:
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | `admin@kramnik.local` | `Admin123!` |
+| Role     | Email                    | Password       |
+| -------- | ------------------------ | -------------- |
+| Admin    | `admin@kramnik.local`    | `Admin123!`    |
 | Customer | `customer@kramnik.local` | `Customer123!` |
 
 Passwords are stored as bcrypt hashes in the database (see `apps/api/prisma/seed.ts`).
@@ -80,16 +80,16 @@ If another PostgreSQL instance already binds **5432**, stop the conflicting serv
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Turbo dev (web + API after types build) |
-| `pnpm build` | Build all workspace packages |
-| `pnpm test` | Run Vitest suite |
-| `pnpm db:up` | `docker compose up -d` |
-| `pnpm db:down` | `docker compose down` |
-| `pnpm db:migrate` | Prisma migrate dev (`@kramnik/api`) |
-| `pnpm db:seed` | Run `prisma/seed.ts` |
-| `pnpm db:studio` | Prisma Studio |
-| `pnpm db:reset` | Reset DB + reapply migrations (then run `db:seed` on Prisma 7) |
-| `pnpm db:generate` | Regenerate Prisma client |
-| `pnpm format` | Prettier format |
+| Command            | Description                                                    |
+| ------------------ | -------------------------------------------------------------- |
+| `pnpm dev`         | Turbo dev (web + API after types build)                        |
+| `pnpm build`       | Build all workspace packages                                   |
+| `pnpm test`        | Run Vitest suite                                               |
+| `pnpm db:up`       | `docker compose up -d`                                         |
+| `pnpm db:down`     | `docker compose down`                                          |
+| `pnpm db:migrate`  | Prisma migrate dev (`@kramnik/api`)                            |
+| `pnpm db:seed`     | Run `prisma/seed.ts`                                           |
+| `pnpm db:studio`   | Prisma Studio                                                  |
+| `pnpm db:reset`    | Reset DB + reapply migrations (then run `db:seed` on Prisma 7) |
+| `pnpm db:generate` | Regenerate Prisma client                                       |
+| `pnpm format`      | Prettier format                                                |
