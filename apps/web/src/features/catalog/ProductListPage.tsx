@@ -1,19 +1,23 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 import {
+  fetchProduct,
   fetchProducts,
   type ProductListParams,
 } from '../../shared/api/products.ts';
 import { ProductCard, ProductCardSkeleton } from './ProductCard.tsx';
 import { ProductFilters } from './ProductFilters.tsx';
-import { useSearchParams } from 'react-router-dom';
 
 const SKELETON_COUNT = 6;
 
 export function ProductListPage() {
+  const queryClient = useQueryClient();
   const [filters, setFilters] = useState<ProductListParams>({});
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams();
+
 
   const {
     data,
@@ -31,10 +35,29 @@ export function ProductListPage() {
 
   const showSkeleton = isPending && !data;
 
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const schedulePrefetch = (id: string) => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => {
+      void queryClient.prefetchQuery({
+        queryKey: ['products', id],
+        queryFn: () => fetchProduct(id),
+      });
+    }, 500); // 200–300 ms
+  };
+
+  const cancelPrefetch = () => {
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+  };
+
   return (
     <section>
       <h2 className="mb-4 text-xl font-semibold">Products</h2>
-      <ProductFilters onFiltersChange={setFilters}/>
+      <ProductFilters onFiltersChange={setFilters} />
 
       {showSkeleton && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -81,7 +104,9 @@ export function ProductListPage() {
                 </p>
                 <button
                   type="button"
-                  onClick={() => setSearchParams(new URLSearchParams(), { replace: true })}
+                  onClick={() =>
+                    setSearchParams(new URLSearchParams(), { replace: true })
+                  }
                   className="ml-auto rounded border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
                 >
                   Reset
@@ -91,8 +116,10 @@ export function ProductListPage() {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.map((product) => (
                   <ProductCard
-                    key={product.id}
                     product={product}
+                    onMouseEnter={() => schedulePrefetch(product.id)}
+                    onMouseLeave={cancelPrefetch}
+                    key={product.id}
                   />
                 ))}
               </div>

@@ -7,9 +7,11 @@ import { categoryLabel } from '../../shared/lib/categoryLabel.ts';
 
 type ProductCardProps = {
   product: ProductPublic;
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void  
 };
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, onMouseEnter, onMouseLeave }: ProductCardProps) {
   const [imageFailed, setImageFailed] = useState(false);
 
   const showImage = product.imageUrl && !imageFailed;
@@ -17,6 +19,8 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       to={`/products/${product.id}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       className="group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
